@@ -1,0 +1,107 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+    integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+
+  <!-- SCRIPT PAGAR.ME -->
+  <script src="https://assets.pagar.me/checkout/1.1.0/checkout.js"></script>
+</head>
+
+<body>
+  <div style="
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  height: 100%;">
+    <button id="pay-button" class='ui-button'>Pagar com Pagar.me</button>
+  </div>
+  <script>
+    var button = document.querySelector("button");
+
+    // Abrir o modal ao clicar no botão
+    button.addEventListener("click", function () {
+      // inicia a instância do checkout
+      var checkout = new PagarMeCheckout.Checkout({
+        encryption_key: "ek_test_kOEKw7VaV1x6BVBOhCAuKOw59W2GjP",
+        success: function (data) {
+          console.log('DATA: ', data);
+          // $.post(`${window.location.href}/check`,  JSON.stringify(data))
+          $.ajax({
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (data) {
+              console.log('(AJAX) Success: ', data);
+            },
+            error: function (e) {
+              console.log('(AJAX) Error: ', e);
+            },
+            processData: false,
+            type: 'POST',
+            url: `${window.location.href}/check`
+          })
+        },
+        error: function (e) {
+          console.log(err);
+        },
+        close: function () {
+          console.log("O modal foi fechado!");
+        }
+      });
+
+      var params = {
+        "amount": 1000,
+        "buttonText": "Pagar",
+        "buttonClass": "pagarme-botao",
+        "createToken": "true",
+        "customerData": "true",
+        // "boletoDiscountPercentage": 5,
+        "boletoHelperText": "Compre com boleto",
+        "creditCardHelperText": "Compre com cartão",
+        //"paymentMethods": "boleto,credit_card",
+        "paymentMethods": "credit_card",
+        // "cardBrands": "elo,visa,mastercard",
+        "uiColor": "#000000",
+        "postbackUrl": "http://google.com.br",
+        "customerExternalId": "#123",
+        "customerName": "Aardvark",
+        "customerEmail": "aardvark.silva@pagar.me",
+        "customerDocumentNumber": "784.801.064-33",
+        "customerAddressStreet": "Rua Doutor Geraldo Campos de Marais",
+        "customerAddressStreetNumber": 240,
+        "customerAddressComplementary": "Complemento",
+        "customerAddressNeighborhood": "Bairro",
+        "customerAddressCity": "São Paulo",
+        "customerAddressState": "SP",
+        "customerAddressZipcode": "87060-624",
+        "customerPhoneDdd": "11",
+        "customerPhoneNumber": "87654321",
+        "items": [
+          {
+            "id": "r123",
+            "title": "Red pill",
+            "unit_price": 10000,
+            "quantity": 1,
+            "tangible": true
+          },
+          {
+            "id": "b123",
+            "title": "Blue pill",
+            "unit_price": 20000,
+            "quantity": 2,
+            "tangible": true
+          }
+        ],
+        "disableZeroDocumentNumber": "true",
+        "paymentButtonText": "Pagar agora!"
+      };
+      checkout.open(params);
+    });
+  </script>
+</body>
+
+</html>
