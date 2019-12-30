@@ -2,13 +2,14 @@
 
 const express = require("express");
 const pagarme = require("pagarme");
-
+const dotenv = require("dotenv").config();
 const routes = express.Router();
+
+console.log("ENV: ", process.env.NODE_ENV);
 
 routes.get("/", async function(req, res) {
   const response = await pagarme.client
-    .connect({ api_key: "ak_test_TkP0pqMRsXUT4IcwREFujs2qoivCqB" })
-    // .connect({ email: "client1@email5.net", password: "12345678" })
+    .connect({ api_key: process.env.API_AK })
     .then(client => {
       return client.transactions.all();
     })
@@ -43,7 +44,7 @@ routes.post("/checkout", async function(req, res) {
   } = req.body;
 
   const response = await pagarme.client
-    .connect({ api_key: "ak_test_TkP0pqMRsXUT4IcwREFujs2qoivCqB" })
+    .connect({ api_key: process.env.API_AK })
     .then(client => {
       return client.transactions.create({
         amount,
@@ -71,7 +72,7 @@ routes.post("/checkout/check", async function(req, res) {
   let data = req.body;
 
   const response = await pagarme.client
-    .connect({ api_key: "ak_test_TkP0pqMRsXUT4IcwREFujs2qoivCqB" })
+    .connect({ api_key: process.env.API_AK })
     .then(client =>
       client.transactions.find({
         id: data.token
