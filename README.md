@@ -1,4 +1,4 @@
-### Pagarme Express Project
+# Pagarme Express Project
 
 ## Setup
 
