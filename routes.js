@@ -66,8 +66,8 @@ routes.post("/checkout", async function(req, res) {
   res.json(response);
 });
 
-routes.post("/checkout/check", async function(req, res) {
-  console.log("ENTROU: POST /CHECKOUT/CHECK");
+routes.post("/checkout/find", async function(req, res) {
+  console.log("ENTROU: POST /CHECKOUT/FIND");
 
   let data = req.body;
 
@@ -76,6 +76,27 @@ routes.post("/checkout/check", async function(req, res) {
     .then(client =>
       client.transactions.find({
         id: data.token
+      })
+    )
+    .then(transaction => {
+      return transaction;
+    })
+    .catch(e => console.error(e.response));
+
+  res.json(response);
+});
+
+routes.post("/checkout/capture", async function(req, res) {
+  console.log("ENTROU: POST /CHECKOUT/CAPTURE");
+
+  let data = req.body;
+
+  const response = await pagarme.client
+    .connect({ api_key: process.env.API_AK })
+    .then(client =>
+      client.transactions.capture({
+        id: data.token,
+        amount: 100100
       })
     )
     .then(transaction => {
