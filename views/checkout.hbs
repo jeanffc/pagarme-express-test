@@ -1,14 +1,20 @@
 <html>
 
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
     integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
-
-  <!-- SCRIPT PAGAR.ME -->
   <script src="https://assets.pagar.me/checkout/1.1.0/checkout.js"></script>
+
+
+
+  <script>
+    // setTimeout(function () { window.alert(JSON.stringify(window.course)) }, 2000);
+    // window.ReactNativeWebView && window.ReactNativeWebView.postMessage('');
+  </script>
 </head>
 
 <body>
@@ -16,10 +22,118 @@
   display: flex; 
   align-items: center; 
   justify-content: center; 
-  height: 100%;">
+  height: 100%;
+  width: 100%;">
     <button id="pay-button" class='ui-button'>Pagar com Pagar.me</button>
   </div>
   <script>
+
+    var checkout;
+
+    function handleSuccess(data) {
+      console.log('DATA: ', data);
+      $.ajax({
+        contentType: 'application/json',
+        type: 'POST',
+        url: `${window.location.href}/check`,
+        dataType: 'json',
+        data: JSON.stringify(data),
+        processData: false,
+        success: function (data) {
+          console.log('(AJAX) Success: ', data);
+          window.ReactNativeWebView && window.ReactNativeWebView.postMessage(data.status);
+        },
+        error: function (e) {
+          console.log('(AJAX) Error: ', e);
+          window.ReactNativeWebView && window.ReactNativeWebView.postMessage(e);
+        },
+      })
+    }
+
+    function handleError(data) {
+      console.log('DATA: ', data);
+    }
+
+    function handleClose(data) {
+      console.log('DATA: ', data);
+      console.log("O modal foi fechado!");
+      // window.ReactNativeWebView &&  window.ReactNativeWebView.postMessage("O modal foi fechado!");
+    }
+
+    isPagarMeLoaded(function () {
+      checkout = new PagarMeCheckout.Checkout({
+        encryption_key: "ek_test_kOEKw7VaV1x6BVBOhCAuKOw59W2GjP",
+        success: handleSuccess,
+        error: handleError,
+        close: handleClose
+      })
+
+      openCheckout()
+    })
+
+    function openCheckout() {
+      var params = {
+        // capture: 'true',
+        // async: 'false',
+        createToken: 'true',
+        customerData: 'true',
+        amount: window && window.course && window.course.price ? window.course.price : 100100,
+        paymentMethods: "boleto,credit_card",
+        // maxInstallments: 2, // número de parcelas permitidas
+        interestRate: 10, // taxa de juros na transação
+        // creditCardDiscountAmount: 10,
+        // creditCardDiscountPercentage: 5,
+        // boletoDiscountPercentage: 5,
+        uiColor: "#000",
+        paymentButtonText: 'Pagar!',
+        // postbackUrl: "http://google.com.br",
+        "customerExternalId": "#123",
+        "customerName": "Aardvark",
+        "customerEmail": "aardvark.silva@pagar.me",
+        "customerDocumentNumber": "784.801.064-33",
+        "customerAddressStreet": "Rua Doutor Geraldo Campos de Marais",
+        "customerAddressStreetNumber": 240,
+        "customerAddressComplementary": "Complemento",
+        "customerAddressNeighborhood": "Bairro",
+        "customerAddressCity": "São Paulo",
+        "customerAddressState": "SP",
+        "customerAddressZipcode": "87060-624",
+        "customerPhoneDdd": "11",
+        "customerPhoneNumber": "87654321",
+        items: [
+          {
+            "id": window && window.course && window.course.id ? window.course.id : 'X',
+            "title": window && window.course && window.course.title ? window.course.title : 'teste',
+            "unit_price": window && window.course && window.course.price ? window.course.price : 100100,
+            "quantity": 1,
+            "tangible": "false"
+          }
+        ]
+      }
+
+      checkout.open(params)
+    }
+
+    // enable buy button when user has agreed with the terms
+    var button = document.querySelector('button')
+
+    button.addEventListener('click', function () {
+      openCheckout()
+    })
+
+    function isPagarMeLoaded(callback) {
+      if (typeof window.PagarMeCheckout !== 'undefined' && typeof PagarMeCheckout.Checkout === 'function') {
+        callback()
+      } else {
+        setTimeout(function waitPagarMe() {
+          isPagarMeLoaded(callback)
+        }, 50)
+      }
+    }
+
+  </script>
+  <script>
+    /*
     var button = document.querySelector("button");
 
     // Abrir o modal ao clicar no botão
@@ -101,6 +215,7 @@
       };
       checkout.open(params);
     });
+    */
   </script>
 </body>
 
