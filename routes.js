@@ -96,7 +96,7 @@ routes.post("/checkout/capture", async function(req, res) {
     .then(client =>
       client.transactions.capture({
         id: data.token,
-        amount: 100100
+        amount: data.price
       })
     )
     .then(transaction => {

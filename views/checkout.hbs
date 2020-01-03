@@ -82,7 +82,7 @@
         "customerPhoneNumber": "87654321",
         "items": [
           {
-            "id": window && window.course && window.course.id ? window.course.id : 'X',
+            "id": window && window.course && window.course.id ? window.course.id : '#teste',
             "title": window && window.course && window.course.title ? window.course.title : 'teste',
             "unit_price": window && window.course && window.course.price ? window.course.price : 100100,
             "quantity": 1,
@@ -95,7 +95,12 @@
     }
 
     function handleSuccess(data) {
+
+      // populando o price, pois o Pagarme não retorna o mesmo
+      data.price = window && window.course && window.course.price ? window.course.price : 100100;
       console.log('DATA: ', data);
+
+      // 
       $.ajax({
         contentType: 'application/json',
         type: 'POST',
@@ -108,9 +113,9 @@
           console.log('(AJAX) Success: ', data);
           window.ReactNativeWebView && window.ReactNativeWebView.postMessage(data.status);
         },
-        error: function (e) {
-          console.log('(AJAX) Error: ', e);
-          window.ReactNativeWebView && window.ReactNativeWebView.postMessage(e);
+        error: function (data) {
+          console.log('(AJAX) Error: ', data);
+          window.ReactNativeWebView && window.ReactNativeWebView.postMessage(data);
         },
       })
     }
@@ -124,10 +129,6 @@
       console.log("O modal foi fechado!");
       // window.ReactNativeWebView &&  window.ReactNativeWebView.postMessage("O modal foi fechado!");
     }
-
-
-
-
 
     // enable buy button when user has agreed with the terms
     var button = document.querySelector('button')
