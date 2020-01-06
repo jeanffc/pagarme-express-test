@@ -67,9 +67,9 @@
         "uiColor": "#000",
         "paymentButtonText": 'Pagar!',
         // postbackUrl: "http://google.com.br",
-        "customerExternalId": "#123",
-        "customerName": "Aardvark",
-        "customerEmail": "aardvark.silva@pagar.me",
+        "customerExternalId": window && window.user && window.user.id ? window.user.id : "#123",
+        "customerName": window && window.user && window.user.name ? window.user.name : "Aardvark",
+        "customerEmail": window && window.user && window.user.email ? window.user.email : "aardvark.silva@pagar.me",
         "customerDocumentNumber": "784.801.064-33",
         "customerAddressStreet": "Rua Doutor Geraldo Campos de Marais",
         "customerAddressStreetNumber": 240,
@@ -97,7 +97,7 @@
     function handleSuccess(data) {
 
       // populando o price, pois o Pagarme não retorna o mesmo
-      data.price = window && window.course && window.course.price ? window.course.price : 100100;
+      data.price = window && window.course && window.course.price ? window.course.price : 100000;
       console.log('DATA: ', data);
 
       // 
