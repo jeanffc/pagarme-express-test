@@ -51,11 +51,11 @@
 
     function openCheckout() {
       var params = {
-        // "capture": 'true',
-        // "async": 'false',
+        "capture": 'true',
+        "async": 'false',
         "createToken": 'true',
         "customerData": 'true',
-        "amount": window && window.course && window.course.price ? window.course.price * 100 : 100100,
+        "amount": window && window.course && window.course.price ? window.course.price * 100 : 100000,
         "paymentMethods": "boleto,credit_card",
         // maxInstallments: 2, // número de parcelas permitidas
         "interestRate": 10, // taxa de juros na transação
@@ -76,13 +76,15 @@
         "customerAddressCity": "São Paulo",
         "customerAddressState": "SP",
         "customerAddressZipcode": "87060-624",
+        "customerCountry": "BR",
+        "customerType": "individual",
         "customerPhoneDdd": "11",
         "customerPhoneNumber": "87654321",
         "items": [
           {
             "id": window && window.course && window.course.id ? window.course.id : '#teste',
             "title": window && window.course && window.course.title ? window.course.title : 'teste',
-            "unit_price": window && window.course && window.course.price ? window.course.price * 100 : 100100,
+            "unit_price": window && window.course && window.course.price ? window.course.price * 100 : 100000,
             "quantity": 1,
             "tangible": "false"
           }
